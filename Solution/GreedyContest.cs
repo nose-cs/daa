@@ -2,80 +2,61 @@
 
 public class GreedyContest : IContest
 {
-    private readonly int[] _participantTimes = [0, 0, 0];
-    
     public List<SolvedProblem> GetBestProblemDistribution(int time, int easyProblems, int mediumProblems, int hardProblems)
     {
         var solvedProblems = new List<SolvedProblem>();
+
+        if (time < Problem.Easy) return solvedProblems;
+
         int[] problemsLeft = [easyProblems, mediumProblems, hardProblems];
+        int[] participantTimes = [0, 0, 0];
 
-        while (Utils.LeftProblems(problemsLeft))
+        var firstToFinishParticipant = 0;
+
+        while (AssignProblem(firstToFinishParticipant, time, problemsLeft, participantTimes, solvedProblems))
         {
-            var assignProblem = false;
-
-            for (var i = 0; i < _participantTimes.Length; i++)
-            {
-                var assignedProblem = AssignProblem(problemsLeft, i, time, solvedProblems);
-                assignProblem = assignProblem || assignedProblem;
-            }
-
-            if (!assignProblem) break;
+            firstToFinishParticipant = GetMinIndex(participantTimes);
         }
 
         return solvedProblems;
     }
-
-    private bool AssignProblem(int[] problemsLeft, int participant, int time, List<SolvedProblem> solvedProblems)
+    
+    /// <summary>
+    /// Attempts to assign a problem to the participant and returns a boolean indicating success.
+    /// </summary>
+    private bool AssignProblem( int participant, int time, int[] problemsLeft, int[] participantTimes, List<SolvedProblem> solvedProblems)
     {
-        if (FindNextPerfectEndTime() > time) 
-            return false;
-        
-        try
+        for (var startTime = participantTimes[participant]; startTime < time; startTime++)
         {
-           var (difficulty, endTime) = FindBetterDifficulty(participant, problemsLeft);
-           if (endTime > time) return false;
-           solvedProblems.Add(new SolvedProblem(difficulty, participant, endTime));
-           _participantTimes[participant] = endTime;
-           Utils.UpdateProblemsLeft(difficulty, problemsLeft, -1);
-           return true;
+            foreach (var difficulty in Problem.Difficulties)
+            {
+                if (!Utils.LeftDifficulty(difficulty, problemsLeft)) continue;
+
+                var endTime = difficulty + startTime;
+
+                if (endTime > time || participantTimes.Contains(endTime)) continue;
+
+                solvedProblems.Add(new SolvedProblem(difficulty, participant, endTime));
+                participantTimes[participant] = endTime;
+                Utils.UpdateProblemsLeft(difficulty, problemsLeft, -1);
+                return true;
+            }
         }
-        catch (ArgumentException)
-        {
-            return false;
-        }
+
+        return false;
     }
     
-    private (int Difficulty, int EndTime) FindBetterDifficulty(int participant, int[] problemsLeft)
+    private static int GetMinIndex(IReadOnlyList<int> array)
     {
-        var nextPerfectEndTime = FindNextPerfectEndTime();
-        var startTime = _participantTimes[participant];
-        var difficulty = nextPerfectEndTime - startTime;
+        var min = int.MaxValue;
+        var index = -1;
+        for (var i = 0; i < array.Count; i++)
+        {
+            if (array[i] >= min) continue;
+            min = array[i];
+            index = i;
+        }
 
-        if (Problem.Difficulties.Contains(difficulty) && Utils.LeftDifficulty(difficulty, problemsLeft))
-            return (difficulty, nextPerfectEndTime);
-
-        difficulty = FindClosestDifficulty(difficulty, problemsLeft);
-        var endTime = int.Max(nextPerfectEndTime, startTime + difficulty);
-
-        return (difficulty, endTime);
+        return index;
     }
-    
-    private int FindNextPerfectEndTime() => _participantTimes.Max() + 1;
-    
-    private static int FindClosestDifficulty(int difficulty, IList<int> problemsLeft) => difficulty switch
-    {
-        >= Problem.Hard when Utils.LeftDifficulty(Problem.Hard, problemsLeft) => Problem.Hard,
-        >= Problem.Hard when Utils.LeftDifficulty(Problem.Medium, problemsLeft) => Problem.Medium,
-        >= Problem.Hard when Utils.LeftDifficulty(Problem.Easy, problemsLeft) => Problem.Easy,
-        
-        <= Problem.Easy when Utils.LeftDifficulty(Problem.Easy, problemsLeft) => Problem.Easy,
-        <= Problem.Easy when Utils.LeftDifficulty(Problem.Medium, problemsLeft) => Problem.Medium,
-        <= Problem.Easy when Utils.LeftDifficulty(Problem.Hard, problemsLeft) => Problem.Hard,
-        
-        Problem.Medium when Utils.LeftDifficulty(Problem.Medium, problemsLeft) => Problem.Medium,
-        Problem.Medium when Utils.LeftDifficulty(Problem.Easy, problemsLeft) => Problem.Easy,
-        Problem.Medium when Utils.LeftDifficulty(Problem.Hard, problemsLeft) => Problem.Hard,
-        
-        _ => throw new ArgumentException()
-    };
 }

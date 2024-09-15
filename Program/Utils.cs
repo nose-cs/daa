@@ -2,7 +2,7 @@
 
 namespace Daa;
 
-public static class SolvedProblemsFormatter
+public static class Utils
 {
     private const string WhiteSpaces = "   ";
 
