@@ -6,7 +6,7 @@ const int easyProblems = 6;
 const int mediumProblems = 1;
 const int hardProblems = 12;
 
-var contest = new GreedyContest2();
+var contest = new MemoizeContest();
 var solvedProblems = contest.GetBestProblemDistribution(time, easyProblems, mediumProblems, hardProblems);
 var validationResult = Tester.Tester.ValidateSolution(time, easyProblems, mediumProblems, hardProblems, solvedProblems);
 
@@ -19,4 +19,4 @@ if (!validationResult.IsValid)
     Console.WriteLine($"Invalid solution: {validationResult.ErrorMessage}\n");
 }
 
-Tester.Tester.Test(contest);
+Tester.Tester.Test(contest, 1000);
