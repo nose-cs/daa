@@ -1,23 +1,26 @@
 ﻿namespace Solution;
 
-public class MemoizeContest : IContest
+public class MemoizeContest2 : IContest
 {
     public List<SolvedProblem> GetBestProblemDistribution(int time, int easyProblems, int mediumProblems, int hardProblems)
     {
-        var dictionary = new Dictionary<int, int[,]>();
-        dictionary[0] = new int[3, 3];
-        dictionary[1] = new int[3, 3];
-        
         var solvedProblems = new List<SolvedProblem>();
+
+        if (time < Problem.Easy) return solvedProblems;
+        
+        var endTimes = new bool[time + 1];
+        endTimes[0] = true;
+        endTimes[1] = true;
+        
         int[] participantTimes = [0, 0, 0];
         int[] problemsLeft = [easyProblems, mediumProblems, hardProblems];
         var best = Array.Empty<SolvedProblem>();
-        GetBestProblemDistribution(time, problemsLeft, participantTimes, solvedProblems, ref best, dictionary);
+        GetBestProblemDistribution(time, problemsLeft, participantTimes, solvedProblems, ref best, endTimes);
         return best.ToList();
     }
     
     private void GetBestProblemDistribution(int time, int[] problemsLeft, IList<int> participantTimes,
-        List<SolvedProblem> solvedProblems, ref SolvedProblem[] maxSolvedProblems, Dictionary<int, int[,]> dictionary)
+        List<SolvedProblem> solvedProblems, ref SolvedProblem[] maxSolvedProblems, bool[] dictionary)
     {
         if (solvedProblems.Count > maxSolvedProblems.Length)
         {
@@ -31,7 +34,6 @@ public class MemoizeContest : IContest
 
         for (var startTime = firstToFinishTime; startTime < time; startTime++)
         {
-            
             foreach (var difficulty in Problem.Difficulties)
             {
                 if (!Utils.LeftDifficulty(difficulty, problemsLeft)) continue;
@@ -39,20 +41,19 @@ public class MemoizeContest : IContest
                 if (endTime > time) continue;
                 if (participantTimes.Any(x => x == endTime)) continue;
 
-                if (!dictionary.ContainsKey(startTime))
+                if (!dictionary[startTime])
                 {
-                    dictionary[startTime] = CopyMatrix(dictionary[firstToFinishTime]);
+                    // Console.WriteLine("shdj");
+                    // dictionary[startTime] = true;
                 }
                 
-                var m = CopyMatrix(dictionary[startTime]);
-                m[firstToFinishParticipant, difficulty - 2] += 1;
-                
-                if (!dictionary.TryAdd(endTime, m))
+                if (dictionary[endTime])
                 {
                     // Si ya contenía la llave
                     continue;
                 }
-                
+
+                dictionary[endTime] = true;
                 var item = new SolvedProblem(difficulty, firstToFinishParticipant, endTime);
 
                 participantTimes[firstToFinishParticipant] = endTime;
@@ -66,18 +67,5 @@ public class MemoizeContest : IContest
                 solvedProblems.Remove(item);
             }
         }
-    }
-    
-    private int[,] CopyMatrix(int[,] matrix)
-    {
-        var m = new int[matrix.GetLength(0), matrix.GetLength(1)];
-        for (var i = 0; i < matrix.GetLength(0); i++)
-        {
-            for (var j = 0; j < matrix.GetLength(1); j++)
-            {
-                m[i, j] = matrix[i, j];
-            }
-        }
-        return m;
     }
 }

@@ -1,12 +1,12 @@
 ﻿using Daa;
 using Solution;
 
-const int time = 12;
-const int easyProblems = 6;
-const int mediumProblems = 1;
-const int hardProblems = 12;
+const int time = 13;
+const int easyProblems = 4;
+const int mediumProblems = 2;
+const int hardProblems = 17;
 
-var contest = new MemoizeContest();
+var contest = new MemoizeContest2();
 var solvedProblems = contest.GetBestProblemDistribution(time, easyProblems, mediumProblems, hardProblems);
 var validationResult = Tester.Tester.ValidateSolution(time, easyProblems, mediumProblems, hardProblems, solvedProblems);
 
