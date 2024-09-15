@@ -1,6 +1,6 @@
 ﻿namespace Solution;
 
-public class MemoizeContest2 : IContest
+public class GreedyRecursiveContest : IContest
 {
     public List<SolvedProblem> GetBestProblemDistribution(int time, int easyProblems, int mediumProblems, int hardProblems)
     {
@@ -37,15 +37,9 @@ public class MemoizeContest2 : IContest
             foreach (var difficulty in Problem.Difficulties)
             {
                 if (!Utils.LeftDifficulty(difficulty, problemsLeft)) continue;
+                if (participantTimes[firstToFinishParticipant] > startTime) continue;
                 var endTime = difficulty + startTime;
                 if (endTime > time) continue;
-                if (participantTimes.Any(x => x == endTime)) continue;
-
-                if (!dictionary[startTime])
-                {
-                    // Console.WriteLine("shdj");
-                    // dictionary[startTime] = true;
-                }
                 
                 if (dictionary[endTime])
                 {
@@ -61,10 +55,6 @@ public class MemoizeContest2 : IContest
                 solvedProblems.Add(item);
                 
                 GetBestProblemDistribution(time, problemsLeft, participantTimes, solvedProblems, ref maxSolvedProblems, dictionary);
-                
-                participantTimes[firstToFinishParticipant] = startTime;
-                Utils.UpdateProblemsLeft(difficulty, problemsLeft, +1);
-                solvedProblems.Remove(item);
             }
         }
     }

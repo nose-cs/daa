@@ -6,7 +6,7 @@ const int easyProblems = 4;
 const int mediumProblems = 2;
 const int hardProblems = 17;
 
-var contest = new MemoizeContest2();
+var contest = new GreedyRecursiveContest();
 var solvedProblems = contest.GetBestProblemDistribution(time, easyProblems, mediumProblems, hardProblems);
 var validationResult = Tester.Tester.ValidateSolution(time, easyProblems, mediumProblems, hardProblems, solvedProblems);
 
