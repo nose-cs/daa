@@ -1,10 +1,10 @@
 ﻿using Daa;
 using Solution;
 
-const int time = 14;
-const int easyProblems = 10;
-const int mediumProblems = 4;
-const int hardProblems = 9;
+const int time = 12;
+const int easyProblems = 6;
+const int mediumProblems = 1;
+const int hardProblems = 12;
 
 var contest = new GreedyContest2();
 var solvedProblems = contest.GetBestProblemDistribution(time, easyProblems, mediumProblems, hardProblems);
