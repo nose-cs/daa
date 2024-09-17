@@ -110,8 +110,20 @@ public static class Tester
         if (solvedProblems.Count(x => x.Difficulty == Problem.Hard) > hardProblems)
             return (false, "More hard problems used than available");
 
-        var grouped = solvedProblems.GroupBy(x => x.Participant);
+        if (solvedProblems.IsThereParticipantWithOverlappingProblems())
+            return (false, "One person solved multiple problems at a time");
 
+        if (solvedProblems.Any(x => x.EndTime > time))
+            return (false, "Some problems ended after the expected time");
+
+        return solvedProblems.Select(x => x.EndTime).ToHashSet().Count != solvedProblems.Count
+            ? (false, "There are two problems that end at the same time")
+            : (true, null);
+    }
+
+    private static bool IsThereParticipantWithOverlappingProblems(this IEnumerable<SolvedProblem> solvedProblems)
+    {
+        var grouped = solvedProblems.GroupBy(x => x.Participant);
 
         foreach (var x in grouped)
         {
@@ -125,22 +137,15 @@ public static class Tester
                     if ((y.StartTime <= z.EndTime && y.EndTime >= z.StartTime) ||
                         (z.StartTime <= y.EndTime && z.EndTime >= y.StartTime))
                     {
-                        return (false, "One person solved multiple problems at a time");
+                        return true;
                     }
 
                     j++;
                 }
-
                 i++;
             }
         }
 
-
-        if (solvedProblems.Any(x => x.EndTime > time))
-            return (false, "Some problems ended after the expected time");
-
-        return solvedProblems.Select(x => x.EndTime).ToHashSet().Count != solvedProblems.Count
-            ? (false, "There are two problems that end at the same time")
-            : (true, null);
+        return false;
     }
 }
