@@ -28,9 +28,13 @@ def build_tree(x: int, y: int):
     if a < 0 or b < 0:
         return None, None
 
-    # Zero or one vertex
-    if n <= 1:
-        return n, []
+    # Zero vertex is not a tree
+    if n <= 0:
+        return None, None
+
+    # One vertex tree
+    if n == 1:
+        return 1, []
 
     # If n > 1 at least must be one vertex in A and B
     if a == 0 or b == 0:
