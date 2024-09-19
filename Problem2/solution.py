@@ -1,7 +1,7 @@
 import math
 
 
-def build_tree(x: int, y: int):
+def solve(x: int, y: int):
     if not x >= y >= 0:
         return None, None
 

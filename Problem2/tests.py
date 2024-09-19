@@ -1,32 +1,32 @@
 import random
-from solution import build_tree
+from solution import solve
 from typing import List
 
 MAX_TREE_SIZE = 200
 
 
 def run_tests(count=1_000_000):
-    print("Starting runing tests...")
+    print("Starting the test suite...")
     for _ in range(0, count):
         nodes_count = random.randint(1, MAX_TREE_SIZE)
         tree = generate_random_tree(nodes_count)
         x, y = count_distances(tree)
-        n, edges = build_tree(x, y)
+        n, edges = solve(x, y)
         if not validate_solution(x, y, n, edges):
-            t = build_tree_list(n, edges)
-            raise Exception(f"Invalid tree {t}, for x={x} and y={y}. Example: {tree}")
-    print("All tests passed...")
+            t = build_tree(n, edges)
+            raise Exception(f"Invalid tree {t}, for x={x} and y={y}. Example tree: {tree}")
+    print("All tests completed successfully.")
 
 
 def validate_solution(x, y, n, edges):
-    tree = build_tree_list(n, edges)
+    tree = build_tree(n, edges)
     if not is_tree(tree):
         return False
     even_count, odd_count = count_distances(tree)
     return even_count == x and odd_count == y
 
 
-def build_tree_list(n: int, edges: List[int]):
+def build_tree(n: int, edges: List[int]):
     tree = {}
     for i in range(1, n + 1):
         tree[i] = []
