@@ -13,20 +13,13 @@ def run_tests(count=1000):
         max_degree = get_max_degree(graph)
         solution = smallest_dominating_set(graph)
         approximation = greedy_dominating_set(graph)
-        if not solution <= approximation <= math.ceil(math.log(n) + 1) * solution:
+        if not solution <= approximation <= math.ceil(math.log(max_degree + 2)) * solution <= math.ceil(math.log(n) + 1) * solution:
             print(f"Solution: {solution}")
             print(f"Approximation: {approximation}")
             print(f"Solution <= Approximation: {solution <= approximation}")
             print(f"ln(n) + 1: {math.ceil(math.log(n) + 1)}")
+            print(f"ln(max_degree + 2): {math.log(max_degree + 2)}")
             print("Test failed.")
-            print("Graph:", graph)
-            print("Subsets solution:", solution)
-            print("Greedy approximation:", approximation)
-            raise Exception("Test failed.")
-        if max_degree > 0 and approximation > (math.log(max_degree) + 2) * solution:
-            print(f"Solution: {solution}")
-            print(f"Approximation: {approximation}")
-            print(f"ln(max_degree) + 2: {math.log(max_degree) + 2}")
             print("Graph:", graph)
             print("Subsets solution:", solution)
             print("Greedy approximation:", approximation)
