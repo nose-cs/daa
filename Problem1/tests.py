@@ -34,11 +34,11 @@ def run_tests(count=1000):
     print("All tests completed successfully.")
 
 
-def generate_random_graph(n, prob=0.5):
+def generate_random_graph(n, edge_prob=0.5):
     graph = {i: [] for i in range(n)}
     for i in range(n):
         for j in range(i + 1, n):
-            if random.random() < prob:
+            if random.random() < edge_prob:
                 graph[i].append(j)
                 graph[j].append(i)
     return graph
