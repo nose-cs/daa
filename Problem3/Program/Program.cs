@@ -20,5 +20,5 @@ if (!validationResult.IsValid)
 }
 
 // // Uncomment this to run n test cases
-// const int n = 500;
-// Tester.Tester.Test(contest, n);
+const int n = 100;
+Tester.Tester.Test(contest, n);

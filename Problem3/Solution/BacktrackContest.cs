@@ -42,7 +42,7 @@ public class BacktrackContest : IContest
                 
                 GetBestProblemDistribution(time, problemsLeft, participantTimes, solvedProblems, ref maxSolvedProblems);
                 
-                participantTimes[firstToFinishParticipant] = startTime;
+                participantTimes[firstToFinishParticipant] = firstToFinishTime;
                 Utils.UpdateProblemsLeft(difficulty, problemsLeft, +1);
                 solvedProblems.Remove(item);
             }

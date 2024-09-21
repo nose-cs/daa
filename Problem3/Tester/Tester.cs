@@ -4,7 +4,7 @@ namespace Tester;
 
 public static class Tester
 {
-    private const int MaxTime = 22;
+    private const int MaxTime = 13;
     private static readonly Random Random = new(2002);
     private static readonly BacktrackContest ExpectedContest = new();
 
