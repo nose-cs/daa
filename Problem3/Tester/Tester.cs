@@ -5,6 +5,14 @@ namespace Tester;
 public static class Tester
 {
     private const int MaxTime = 13;
+
+    private static readonly (int Easy, int Medium, int Hard)[] MaxProblemsCount =
+    [
+        (7, 7, 6),
+        (3, 2, 10),
+        (1, 2, 10)
+    ];
+
     private static readonly Random Random = new(2002);
     private static readonly BacktrackContest ExpectedContest = new();
 
@@ -59,36 +67,33 @@ public static class Tester
 
     private static IEnumerable<Input> GenerateInputs(int count)
     {
-        var first = count / 4;
-        var second = count / 4;
-        var third = count - first - second;
+        var tests = 0;
 
-        for (var i = 0; i < first; i++)
+        foreach (var maxProblemsCount in MaxProblemsCount)
         {
-            var l = Random.Next(MaxTime);
-            var a = Random.Next(20);
-            var b = Random.Next(20);
-            var c = Random.Next(20);
-            yield return new Input(l, a, b, c);
+            for (var i = 0; i < count / MaxProblemsCount.Length; i++)
+            {
+                yield return GenerateInput(maxProblemsCount);
+                tests++;
+            }
         }
 
-        for (var i = 0; i < second; i++)
-        {
-            var l = Random.Next(MaxTime);
-            var a = Random.Next(20);
-            var b = Random.Next(3);
-            var c = Random.Next(20);
-            yield return new Input(l, a, b, c);
-        }
+        var remainingCount = count - tests;
+        var lastMaxProblemsCount = MaxProblemsCount.Last();
 
-        for (var i = 0; i < third; i++)
+        for (var i = 0; i < remainingCount; i++)
         {
-            var l = Random.Next(MaxTime);
-            var a = Random.Next(10);
-            var b = Random.Next(5);
-            var c = Random.Next(20);
-            yield return new Input(l, a, b, c);
+            yield return GenerateInput(lastMaxProblemsCount);
         }
+    }
+
+    private static Input GenerateInput((int Easy, int Medium, int Hard) maxProblemsCount)
+    {
+        var l = Random.Next(MaxTime);
+        var a = Random.Next(maxProblemsCount.Easy);
+        var b = Random.Next(maxProblemsCount.Medium);
+        var c = Random.Next(maxProblemsCount.Hard);
+        return new Input(l, a, b, c);
     }
 
     private static (bool IsValid, string? ErrorMessage) ValidateSolution(Input input,
@@ -110,7 +115,7 @@ public static class Tester
         if (solvedProblems.Count(x => x.Difficulty == Problem.Hard) > hardProblems)
             return (false, "More hard problems used than available");
 
-        if (solvedProblems.IsThereParticipantWithOverlappingProblems())
+        if (solvedProblems.GroupBy(x => x.Participant).Any(group => HasOverlappingProblems(group.ToList())))
             return (false, "One person solved multiple problems at a time");
 
         if (solvedProblems.Any(x => x.EndTime > time))
@@ -121,29 +126,14 @@ public static class Tester
             : (true, null);
     }
 
-    private static bool IsThereParticipantWithOverlappingProblems(this IEnumerable<SolvedProblem> solvedProblems)
+    private static bool HasOverlappingProblems(List<SolvedProblem> problems)
     {
-        var grouped = solvedProblems.GroupBy(x => x.Participant);
+        problems.Sort((a, b) => a.StartTime.CompareTo(b.StartTime));
 
-        foreach (var x in grouped)
+        for (var i = 0; i < problems.Count - 1; i++)
         {
-            var i = 0;
-            foreach (var y in x)
-            {
-                var j = 0;
-                foreach (var z in x)
-                {
-                    if (i == j) continue;
-                    if ((y.StartTime <= z.EndTime && y.EndTime >= z.StartTime) ||
-                        (z.StartTime <= y.EndTime && z.EndTime >= y.StartTime))
-                    {
-                        return true;
-                    }
-
-                    j++;
-                }
-                i++;
-            }
+            if (problems[i].EndTime >= problems[i + 1].StartTime)
+                return true;
         }
 
         return false;
