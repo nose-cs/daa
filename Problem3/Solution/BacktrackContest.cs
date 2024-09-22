@@ -5,47 +5,48 @@ public class BacktrackContest : IContest
     public List<SolvedProblem> GetBestProblemDistribution(int time, int easyProblems, int mediumProblems,
         int hardProblems)
     {
-        var solvedProblems = new List<SolvedProblem>();
         int[] participantTimes = [0, 0, 0];
-        int[] problemsLeft = [easyProblems, mediumProblems, hardProblems];
-        var best = Array.Empty<SolvedProblem>();
-        GetBestProblemDistribution(time, problemsLeft, participantTimes, solvedProblems, ref best);
-        return best.ToList();
+        int[] remainingProblems = [easyProblems, mediumProblems, hardProblems];
+        return GetBestProblemDistribution(time, remainingProblems, participantTimes, [], []);
     }
 
-    private void GetBestProblemDistribution(int time, int[] problemsLeft, IList<int> participantTimes,
-        List<SolvedProblem> solvedProblems, ref SolvedProblem[] maxSolvedProblems)
+    private List<SolvedProblem> GetBestProblemDistribution(int time, int[] remainingProblems, int[] participantTimes,
+        List<SolvedProblem> currentSolvedProblems, List<SolvedProblem> bestSolvedProblems)
     {
-        if (solvedProblems.Count > maxSolvedProblems.Length)
+        if (currentSolvedProblems.Count > bestSolvedProblems.Count)
         {
-            var x = new SolvedProblem[solvedProblems.Count];
-            solvedProblems.CopyTo(x);
-            maxSolvedProblems = x;
+            bestSolvedProblems = [..currentSolvedProblems];
         }
 
-        var firstToFinishTime = participantTimes.Min();
-        var firstToFinishParticipant = participantTimes.IndexOf(firstToFinishTime);
+        var (firstToFinishTime, firstToFinishParticipant) = participantTimes.MinWithIndex();
 
+        var availableEndTimes = time - firstToFinishTime;
+            
+        if (currentSolvedProblems.Count + availableEndTimes < bestSolvedProblems.Count)
+            return bestSolvedProblems;
+        
         for (var startTime = firstToFinishTime; startTime < time; startTime++)
         {
             foreach (var difficulty in Problem.Difficulties)
             {
-                if (!Utils.LeftDifficulty(difficulty, problemsLeft)) continue;
+                if (!Utils.LeftDifficulty(difficulty, remainingProblems)) continue;
                 var endTime = difficulty + startTime;
-                if (endTime > time) continue;
-                if (participantTimes.Any(x => x == endTime)) continue;
+                if (endTime > time || participantTimes.Any(x => x == endTime)) continue;
 
                 participantTimes[firstToFinishParticipant] = endTime;
-                Utils.UpdateProblemsLeft(difficulty, problemsLeft, -1);
+                Utils.UpdateProblemsLeft(difficulty, remainingProblems, -1);
                 var item = new SolvedProblem(difficulty, firstToFinishParticipant, endTime);
-                solvedProblems.Add(item);
-                
-                GetBestProblemDistribution(time, problemsLeft, participantTimes, solvedProblems, ref maxSolvedProblems);
-                
+                currentSolvedProblems.Add(item);
+
+                bestSolvedProblems = GetBestProblemDistribution(time, remainingProblems, participantTimes,
+                    currentSolvedProblems, bestSolvedProblems);
+
                 participantTimes[firstToFinishParticipant] = firstToFinishTime;
-                Utils.UpdateProblemsLeft(difficulty, problemsLeft, +1);
-                solvedProblems.Remove(item);
+                Utils.UpdateProblemsLeft(difficulty, remainingProblems, +1);
+                currentSolvedProblems.Remove(item);
             }
         }
+
+        return bestSolvedProblems;
     }
 }

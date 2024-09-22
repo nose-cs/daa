@@ -15,7 +15,7 @@ public class SolvedProblem(int difficulty, int participant, int endTime = -1) : 
     public int Participant { get; } = participant;
     public int EndTime { get; } = endTime;
 
-    public int StartTime => EndTime - Difficulty + 1;
+    public int StartTime => EndTime - Difficulty;
 
     public override string ToString()
     {

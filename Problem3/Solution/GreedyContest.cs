@@ -8,14 +8,14 @@ public class GreedyContest : IContest
 
         if (time < Problem.Easy) return solvedProblems;
 
-        int[] problemsLeft = [easyProblems, mediumProblems, hardProblems];
+        int[] remainingProblems = [easyProblems, mediumProblems, hardProblems];
         int[] participantTimes = [0, 0, 0];
 
         var firstToFinishParticipant = 0;
 
-        while (AssignProblem(firstToFinishParticipant, time, problemsLeft, participantTimes, solvedProblems))
+        while (AssignProblem(firstToFinishParticipant, time, remainingProblems, participantTimes, solvedProblems))
         {
-            firstToFinishParticipant = GetMinIndex(participantTimes);
+            firstToFinishParticipant = participantTimes.MinWithIndex().Index;
         }
 
         return solvedProblems;
@@ -24,13 +24,13 @@ public class GreedyContest : IContest
     /// <summary>
     /// Attempts to assign a problem to the participant and returns a boolean indicating success.
     /// </summary>
-    private bool AssignProblem( int participant, int time, int[] problemsLeft, int[] participantTimes, List<SolvedProblem> solvedProblems)
+    private bool AssignProblem( int participant, int time, int[] remainingProblems, int[] participantTimes, List<SolvedProblem> solvedProblems)
     {
         for (var startTime = participantTimes[participant]; startTime < time; startTime++)
         {
             foreach (var difficulty in Problem.Difficulties)
             {
-                if (!Utils.LeftDifficulty(difficulty, problemsLeft)) continue;
+                if (!Utils.LeftDifficulty(difficulty, remainingProblems)) continue;
 
                 var endTime = difficulty + startTime;
 
@@ -38,25 +38,11 @@ public class GreedyContest : IContest
 
                 solvedProblems.Add(new SolvedProblem(difficulty, participant, endTime));
                 participantTimes[participant] = endTime;
-                Utils.UpdateProblemsLeft(difficulty, problemsLeft, -1);
+                Utils.UpdateProblemsLeft(difficulty, remainingProblems, -1);
                 return true;
             }
         }
 
         return false;
-    }
-    
-    private static int GetMinIndex(IReadOnlyList<int> array)
-    {
-        var min = int.MaxValue;
-        var index = -1;
-        for (var i = 0; i < array.Count; i++)
-        {
-            if (array[i] >= min) continue;
-            min = array[i];
-            index = i;
-        }
-
-        return index;
     }
 }

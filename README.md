@@ -1,6 +1,14 @@
-# Problemas
+# Proyecto de diseño y análisis de algoritmos
 
-## 1. El secreto de la Isla
+| **Nombre**              | **Grupo** | **Github**                                     |
+|-------------------------|-----------|------------------------------------------------|
+| Daniel Abad Fundora     | C411      | [@DanielAbadF](https://github.com/DanielAbadF) |
+| Anabel Benítez González | C411      | [@anabel02](https://github.com/anabel02)       |
+| Enzo Rojas D'Toste      | C411      | [@EnzoDtoste](https://github.com/EnzoDtoste)   |          
+
+## Problemas
+
+### 1. El secreto de la Isla
 
 En el corazón del vasto océano azul, existe una isla tropical conocida como La Isla de Coba, un lugar de exuberante vegetación y antigua sabiduría. La tribu que habita en esta isla ha vivido en armonía con la naturaleza durante siglos, guiados por un consejo de ancianos que custodian el equilibrio entre los habitantes de la isla y sus recursos.
 
@@ -10,7 +18,9 @@ La isla tiene una serie de aldeas unidas entre ellas por caminos. El reto es enc
 
 Los jóvenes líderes deben resolver este desafío para mostrar su valía. Con cada nueva selección de guardianes, la estabilidad de la isla se estremece. El futuro de La Isla de Coba depende de que uno de los jóvenes (como tú) encuentre esta distribución óptima de guardianes y se convierta en el próximo jefe absoluto.
 
-## 2. Distancia de árboles
+---
+
+### 2. Distancia de árboles
 
 Un árbol se define como un grafo no dirigido y conectado con $n$ vértices y $n-1$ aristas. La distancia entre dos vértices en un árbol es igual al número de aristas en el camino simple único entre ellos.
 
@@ -21,7 +31,9 @@ Se te dan dos enteros $x$ y $y$. Construye un árbol con las siguientes propieda
 
 Por par de vértices, nos referimos a un par ordenado de dos vértices (posiblemente, el mismo o diferente).
 
-## 3. Torneo
+---
+
+### 3. Torneo
 
 Tan pronto como comienza el torneo de programación competitiva, tu experimentado equipo de $3$ personas se da cuenta inmediatamente de que este presenta $a$ problemas fáciles, $b$ problemas medianos, y $c$ problemas difíciles. Resolver un problema les tomará a cualquiera de ustedes $2$, $3$ o $4$ unidades de tiempo, dependiendo de si el problema es fácil, mediano o difícil. Independientemente de la dificultad del problema, la última unidad de tiempo gastada en resolverlo debe gastarse utilizando la computadora compartida.
 
