@@ -57,3 +57,90 @@ def greedy_dominating_set(graph):
                 uncovered_neighbors[neighbor] -= 1
             uncovered_neighbors[neighbor] -= 1
     return len(dominating_set)
+
+
+def greedy_dominating_set_V_plus_E(graph):
+    WHITE = 0
+    GRAY = 1
+    BLACK = 2
+
+    color = {}  # Color of each node: white, gray, or black
+    count = {}  # Number of adjacent white nodes for each node
+    buckets = {}  # Buckets to group nodes by their count of adjacent white nodes
+
+    # Find the maximum degree in the graph
+    max_degree = max(len(neighbors) for neighbors in graph.values())
+    n = len(graph)
+    white_nodes_remaining = n
+
+    # Initialize buckets for counts from 0 to max_degree
+    for c in range(max_degree + 1):
+        buckets[c] = set()
+
+    # Initialize colors and counts, and fill the buckets
+    for u in graph:
+        color[u] = WHITE
+        count_u = len(graph[u])
+        count[u] = count_u
+        buckets[count_u].add(u)
+
+    max_count = max(count.values())
+    dominating_set = set()
+
+    # Main loop to select nodes for the dominating set
+    while white_nodes_remaining > 0:
+        # Find the node with the maximum count of adjacent white nodes
+        while max_count >= 0 and not buckets[max_count]:
+            max_count -= 1
+        if max_count < 0:
+            break  # No nodes left to process
+        
+        # There are white nodes but there aren´t connections to them
+        if max_count == 0:
+            for node, c in color.items():
+                if c == WHITE:
+                    dominating_set.add(node)
+            
+            return len(dominating_set)
+
+        u = buckets[max_count].pop()
+        
+        if color[u] == BLACK:
+            continue  # Skip if the node is already black
+        
+        u_was_WHITE = False
+        if color[u] == WHITE:
+            white_nodes_remaining -= 1
+            u_was_WHITE = True
+        
+        color[u] = BLACK
+        dominating_set.add(u)
+
+        # Update the colors and counts of adjacent nodes
+        for v in graph[u]:
+            if color[v] != BLACK and u_was_WHITE:
+                old_count = count[v]
+                
+                if v in buckets[old_count]:
+                    buckets[old_count].remove(v)
+                
+                count[v] -= 1
+                new_count = count[v]
+                buckets[new_count].add(v)
+
+            if color[v] == WHITE:
+                color[v] = GRAY
+                white_nodes_remaining -= 1
+                
+                for w in graph[v]:
+                    if color[w] != BLACK:
+                        old_count = count[w]
+                        
+                        if w in buckets[old_count]:
+                            buckets[old_count].remove(w)
+                        
+                        count[w] -= 1
+                        new_count = count[w]
+                        buckets[new_count].add(w)
+            
+    return len(dominating_set)
