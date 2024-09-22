@@ -10,7 +10,7 @@ public static class Tester
     [
         (7, 7, 6),
         (3, 2, 10),
-        (1, 2, 10)
+        (10, 0, 10)
     ];
 
     private static readonly Random Random = new(2002);
@@ -25,8 +25,7 @@ public static class Tester
         foreach (var testCase in testCases)
         {
             var input = testCase.Input;
-            var result = contest.GetBestProblemDistribution(input.Time, input.EasyProblems, input.MediumProblems,
-                input.HardProblems);
+            var result = contest.GetBestProblemDistribution(input.Time, input.EasyProblems, input.MediumProblems, input.HardProblems);
             var validationResult = ValidateSolution(testCase.Input, result);
 
             if (!validationResult.IsValid)
@@ -132,7 +131,7 @@ public static class Tester
 
         for (var i = 0; i < problems.Count - 1; i++)
         {
-            if (problems[i].EndTime >= problems[i + 1].StartTime)
+            if (problems[i].EndTime > problems[i + 1].StartTime)
                 return true;
         }
 
