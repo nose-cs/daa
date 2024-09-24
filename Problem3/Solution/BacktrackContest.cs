@@ -10,6 +10,11 @@ public class BacktrackContest : IContest
         return GetBestProblemDistribution(time, remainingProblems, participantTimes, [], []);
     }
 
+    public int GetMaxSolvedProblemsCount(int time, int easyProblems, int mediumProblems, int hardProblems)
+    {
+        return GetBestProblemDistribution(time, easyProblems, mediumProblems, hardProblems).Count;
+    }
+
     private List<SolvedProblem> GetBestProblemDistribution(int time, int[] remainingProblems, int[] participantTimes,
         List<SolvedProblem> currentSolvedProblems, List<SolvedProblem> bestSolvedProblems)
     {

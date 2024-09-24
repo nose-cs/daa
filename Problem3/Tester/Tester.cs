@@ -42,6 +42,27 @@ public static class Tester
 
         Console.WriteLine("All tests passed!!!");
     }
+    
+    public static void TestCount(IContest contest, int count = 100)
+    {
+        Console.WriteLine("Starting tests...");
+
+        var testCases = GenerateTestCases(count);
+
+        foreach (var testCase in testCases)
+        {
+            var input = testCase.Input;
+            var result = contest.GetMaxSolvedProblemsCount(input.Time, input.EasyProblems, input.MediumProblems, input.HardProblems);
+
+            if (result != testCase.ExpectedSolution.Count)
+            {
+                throw new Exception(
+                    $"{testCase.ExpectedSolution.Count} solved problems were expected, but {result} were gotten.\nTestCase: {testCase}");
+            }
+        }
+
+        Console.WriteLine("All tests passed!!!");
+    }
 
     private static IEnumerable<TestCase> GenerateTestCases(int count)
     {

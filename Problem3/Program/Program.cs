@@ -19,6 +19,6 @@ if (!validationResult.IsValid)
     Console.WriteLine($"Invalid solution: {validationResult.ErrorMessage}\n");
 }
 
-// // Uncomment this to run n test cases
-// const int n = 100;
-// Tester.Tester.Test(contest, n);
+// Uncomment this to run n test cases
+const int n = 100;
+Tester.Tester.TestCount(contest, n);
