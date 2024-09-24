@@ -11,4 +11,4 @@ from tests import run_tests, generate_random_graph, compare_solutions
 
 # Run the test suite
 #run_tests(5000)
-compare_solutions(2000)
+compare_solutions(2000, compare_output=True)

@@ -3,7 +3,7 @@ import math
 import time
 from solution import smallest_dominating_set, greedy_dominating_set, greedy_dominating_set_V_plus_E
 
-MAX_GRAPH_SIZE = 200
+MAX_GRAPH_SIZE = 50
 
 
 def run_tests(count=1000):

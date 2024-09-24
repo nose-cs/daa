@@ -74,13 +74,13 @@ def greedy_dominating_set_V_plus_E(graph):
     white_nodes_remaining = n
 
     # Initialize buckets for counts from 0 to max_degree
-    for c in range(max_degree + 1):
+    for c in range(max_degree + 2):
         buckets[c] = set()
 
     # Initialize colors and counts, and fill the buckets
     for u in graph:
         color[u] = WHITE
-        count_u = len(graph[u])
+        count_u = len(graph[u]) + 1
         count[u] = count_u
         buckets[count_u].add(u)
 
@@ -90,9 +90,9 @@ def greedy_dominating_set_V_plus_E(graph):
     # Main loop to select nodes for the dominating set
     while white_nodes_remaining > 0:
         # Find the node with the maximum count of adjacent white nodes
-        while max_count >= 0 and not buckets[max_count]:
+        while max_count > 0 and not buckets[max_count]:
             max_count -= 1
-        if max_count < 0:
+        if max_count <= 0:
             break  # No nodes left to process
         
         # There are white nodes but there aren´t connections to them
@@ -132,6 +132,15 @@ def greedy_dominating_set_V_plus_E(graph):
                 color[v] = GRAY
                 white_nodes_remaining -= 1
                 
+                old_count = count[v]
+                
+                if v in buckets[old_count]:
+                    buckets[old_count].remove(v)
+                
+                count[v] -= 1
+                new_count = count[v]
+                buckets[new_count].add(v)
+
                 for w in graph[v]:
                     if color[w] != BLACK:
                         old_count = count[w]
