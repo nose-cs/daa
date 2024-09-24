@@ -57,13 +57,13 @@ public class GreedyContest : IContest
     {
         if (time < 2) return time;
 
-        if (2 * easyProblems + 3 * mediumProblems + 4 * hardProblems <= 3 * (time - 1))
+        if (2 * easyProblems + 3 * mediumProblems + 4 * hardProblems <= 3 * (time - 2))
             return Math.Max(1, time - easyProblems - mediumProblems - hardProblems);
 
         if (easyProblems == 0)
             return mediumProblems > 0
-                ? 2 + DivisionCeiling(Math.Max(0, time - 2 - mediumProblems), 3)
-                : DivisionCeiling(time - 3, 3);
+                ? 2 + DivisionCeiling(Math.Max(0, time - 4 - mediumProblems), 4)
+                : 3 + DivisionCeiling(time - 6, 4);
 
         if (mediumProblems == 0)
         {
@@ -73,7 +73,7 @@ public class GreedyContest : IContest
 
         return 1 + DivisionCeiling(Math.Max(0,
             time - 1 - mediumProblems - 2 * Math.Min(hardProblems, easyProblems) -
-            (easyProblems - Math.Min(hardProblems, easyProblems))), 3);
+            (easyProblems - Math.Min(hardProblems, easyProblems))), 4);
     }
 
     private static int DivisionCeiling(int x, int y)

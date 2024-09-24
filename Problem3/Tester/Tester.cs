@@ -5,17 +5,25 @@ namespace Tester;
 public static class Tester
 {
     private const int MaxTime = 13;
-
     private static readonly (int Easy, int Medium, int Hard)[] MaxProblemsCount =
     [
         (7, 7, 6),
         (3, 2, 10),
         (10, 0, 10)
     ];
+    private static readonly BacktrackContest ExpectedContest = new();
+    
+    // private const int MaxTime = 100;
+    // private static readonly (int Easy, int Medium, int Hard)[] MaxProblemsCount =
+    // [
+    //     (20, 30, 70),
+    //     (50, 20, 40),
+    //     (10, 6, 90)
+    // ];
+    // private static readonly GreedyContest ExpectedContest = new();
 
     private static readonly Random Random = new(2002);
-    private static readonly BacktrackContest ExpectedContest = new();
-
+    
     public static void Test(IContest contest, int count = 100)
     {
         Console.WriteLine("Starting tests...");
