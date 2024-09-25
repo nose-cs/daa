@@ -1,4 +1,4 @@
-# Proyecto de diseño y análisis de algoritmos
+# Proyecto Final de Diseño y Análisis de Algoritmos
 
 | **Nombre**              | **Grupo** | **Github**                                     |
 |-------------------------|-----------|------------------------------------------------|

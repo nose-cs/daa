@@ -60,15 +60,15 @@ public class GreedyContest : IContest
         // ++++===
         // -++++==
         // --++++=
-        // At the end, there is a gap of 6, hence time - 6
+        // At the end, there is a gap of 6, hence (3 * time - 6)
         if (2 * easyProblems + 3 * mediumProblems + 4 * hardProblems <= 3 * time - 6)
             return Math.Max(1, time - easyProblems - mediumProblems - hardProblems);
 
         if (easyProblems == 0)
             return mediumProblems > 0
-                // - 2 because at most two blocks of 4 are used among the first 3 blocks
+                // At most two blocks of 4 units are used among the first 3 blocks, hence (- 2)
                 ? 2 + DivisionCeiling(Math.Max(0, time - 2 - mediumProblems - 2), 4)
-                // - 3 because the first three blocks are of 4
+                // The first three blocks are of 4 units, hence (- 3)
                 : 3 + DivisionCeiling(time - 3 - 3, 4);
 
         // Make one easy problem behave like a medium problem
